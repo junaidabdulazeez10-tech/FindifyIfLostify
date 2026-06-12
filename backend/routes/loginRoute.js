@@ -23,9 +23,12 @@ router.post("/login", checkSchema(loginValidationSchema), async (req, res) => {
 
     const password = await bcrypt.compare(req.body.password, user.password)
     if (!password) return res.status(400).json({ message: "Invalid Credentials :/" })
-    
-    const token = jwt.sign({userId: user._id}, process.env.SECRET)
-    return res.status(200).json({ message: `Welcome Back! ${user.username} ;)`, username: user.username, token, profilePicture: user.profilePicture })
+
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET)
+    return res.status(200).json({
+      message: `Welcome Back! ${user.username} ;)`,
+      username: user.username, token, profilePicture: user.profilePicture
+    })
 
   } catch (error) {
     console.log(error)

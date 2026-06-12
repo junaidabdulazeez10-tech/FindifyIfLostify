@@ -18,34 +18,35 @@ router.get("/posts", async (req, res) => {
   }
 })
 
-router.post("/post", authenticator, upload.single("image"), checkSchema(postValidationSchema), async (req, res) => {
-  try {
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      return res.status(400).send({ errors: result.array() })
+router.post("/post", authenticator, upload.single("image"),
+  checkSchema(postValidationSchema), async (req, res) => {
+    try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return res.status(400).send({ errors: result.array() })
+      }
+      if (!req.file) {
+        return res.status(400).json({
+          errors: [{ msg: "Image is required", path: "image" }]
+        });
+      }
+      const createPost = new Post()
+      createPost.username = req.body.username;
+      createPost.profilePicture = req.body.profilePicture;
+      createPost.condition = req.body.condition;
+      createPost.title = req.body.title;
+      createPost.category = req.body.category;
+      createPost.location = req.body.location;
+      createPost.date = new Date(req.body.date);
+      createPost.description = req.body.description;
+      createPost.image = `http://localhost:5000/uploads/${req.file.filename}`;
+      await createPost.save()
+      res.status(201).json({ message: 'Post Created :)' })
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong while creating the post :(" })
+      console.log(error)
     }
-    if (!req.file) {
-      return res.status(400).json({
-        errors: [{ msg: "Image is required", path: "image" }]
-      });
-    }
-    const createPost = new Post()
-    createPost.username = req.body.username;
-    createPost.profilePicture = req.body.profilePicture;
-    createPost.condition = req.body.condition;
-    createPost.title = req.body.title;
-    createPost.category = req.body.category;
-    createPost.location = req.body.location;
-    createPost.date = new Date(req.body.date);
-    createPost.description = req.body.description;
-    createPost.image =  `http://localhost:5000/uploads/${req.file.filename}`;
-    await createPost.save()
-    res.status(201).json({ message: 'Post Created :)' })
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong while creating the post :(" })
-    console.log(error)
-  }
-})
+  })
 
 router.delete("/post/:id", authenticator, async (req, res) => {
   try {

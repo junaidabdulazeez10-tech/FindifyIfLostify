@@ -74,7 +74,7 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
               <div className={`border mt-2 mb-2 p-3 ${mode ? "border-light text-light" : "border-dark text-dark"}`}>
                 <div className='d-flex'>
                   <Link to={`/profile/${value.username}`} style={{ textDecoration: "none", }}>
-                    <img className={`user-img-comment border border-2 ${mode ? "border-light" : "border-dark"}`} style={{ objectFit: "cover", width: "55px", height: "auto", borderRadius: "30px" }} src={localStorage.getItem("profilePicture")}  /></Link>
+                    <img className={`user-img-comment border border-2 ${mode ? "border-light" : "border-dark"}`} style={{ objectFit: "cover", width: "55px", height: "55px", borderRadius: "30px" }} src={localStorage.getItem("profilePicture")}  /></Link>
                   <div className='d-flex flex-column flex-grow-1 '>
                     <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none", }}>
                       <div className={`${mode ? "text-light" : "text-dark"}`} style={{ fontSize: "17px" }}>@{localStorage.getItem("username")}</div>
