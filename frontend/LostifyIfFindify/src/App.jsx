@@ -4,7 +4,7 @@ import CommentPage from './pages/commentPage'
 import CategoryPage from './pages/categoryPage'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from "./api/axios";
 
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
   const[showDescription, setShowDescription] = useState(false)
 
   async function getPosts() {
-    const response = await axios.get("http://localhost:5000/posts")
+    const response = await api.get("/posts");
     setPosts(response.data.posts)
   }
 

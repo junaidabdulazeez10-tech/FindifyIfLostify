@@ -4,8 +4,9 @@ import postValidationSchema from '../validationsFolder/postValidationSchema.js';
 import { validationResult, checkSchema } from 'express-validator';
 import authenticator from '../middleware/auth.js';
 import multer from 'multer'
+import { storage } from "../config/cloudinary.js";
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage });
 const router = Router()
 
 router.get("/posts", async (req, res) => {
@@ -39,7 +40,7 @@ router.post("/post", authenticator, upload.single("image"),
       createPost.location = req.body.location;
       createPost.date = new Date(req.body.date);
       createPost.description = req.body.description;
-      createPost.image = `http://localhost:5000/uploads/${req.file.filename}`;
+      createPost.image = req.file.path;
       await createPost.save()
       res.status(201).json({ message: 'Post Created :)' })
     } catch (error) {
@@ -69,11 +70,7 @@ router.patch("/post/:id", authenticator, upload.single("image"), checkSchema(pos
     if (!result.isEmpty()) {
       return res.status(400).send({ errors: result.array() })
     }
-    if (!req.file) {
-      return res.status(400).json({
-        errors: [{ msg: "Image is required", path: "image" }]
-      });
-    }
+    
     const id = req.params.id;
     const post = await Post.findById(id);
     if (!post) {
@@ -86,7 +83,7 @@ router.patch("/post/:id", authenticator, upload.single("image"), checkSchema(pos
     post.location = req.body.location || post.location
     post.date = req.body.date ? new Date(req.body.date) : post.date;
     post.description = req.body.description || post.description
-    post.image = req.file ? `http://localhost:5000/uploads/${req.file.filename}` : post.image;
+    post.image = req.file ? req.file.path : post.image;
     await post.save()
     res.status(200).json({ message: "Post Updated ;)" })
   } catch (error) {

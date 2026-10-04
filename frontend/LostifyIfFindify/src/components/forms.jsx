@@ -1,4 +1,4 @@
-import axios from "axios"
+import api from "../api/axios";
 import { useState, useRef } from "react"
 import alertBootstrap from "../utils/utils"
 import "./forms.css"
@@ -63,7 +63,7 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       formDataSP.append("email", email)
       formDataSP.append("password", password)
       formDataSP.append("profilePicture", profilePicture)
-      const response = await axios.post("http://localhost:5000/signup", formDataSP);
+      const response = await api.post("/signup", formDataSP);
       alertBootstrap(response.data.message, 'success')
       closeSignUpModal.current.click()
       localStorage.setItem("token", response.data.token)
@@ -83,7 +83,7 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
   async function loggingIn() {
     try {
       const bodyForLogIn = { email, password }
-      const response = await axios.post("http://localhost:5000/login", bodyForLogIn)
+      const response = await api.post("/login", bodyForLogIn);
       alertBootstrap(response.data.message, 'success')
       closeLogInModal.current.click()
       localStorage.setItem("token", response.data.token)
@@ -120,12 +120,11 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       formData.append("date", date)
       formData.append("description", description)
       formData.append("image", image)
-      const response = await axios.post("http://localhost:5000/post", formData, {
-        headers:
-        {
+      const response = await api.post("/post", formData, {
+        headers: {
           authorization: `Bearer ${token}`
         }
-      })
+      });
       setCategory('')
       setCondition('')
       setDate('')
@@ -162,12 +161,11 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       if (date) editFormData.append("date", date);
       if (description) editFormData.append("description", description);
       if (image) editFormData.append("image", image);
-      const response = await axios.patch(`http://localhost:5000/post/${id}`, editFormData, {
-        headers:
-        {
+      const response = await api.patch(`/post/${id}`, editFormData, {
+        headers: {
           authorization: `Bearer ${token}`
         }
-      })
+      });
       closeEditPostModal.current.click()
       alertBootstrap(response.data.message, 'warning')
       getPosts()
@@ -187,12 +185,11 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
 
   async function deletePost() {
     try {
-      const response = await axios.delete(`http://localhost:5000/post/${id}`, {
-        headers:
-        {
+      const response = await api.delete(`/post/${id}`, {
+        headers: {
           authorization: `Bearer ${token}`
         }
-      })
+      });
       console.log(response.data)
       alertBootstrap(response.data.message, 'danger')
       getPosts()
@@ -208,11 +205,15 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
         text: editedText,
         profilePicture: localStorage.getItem("profilePicture")
       }
-      const response = await axios.patch(`http://localhost:5000/post/${postId}/comment/${commentId}`, bodyForComment, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await api.patch(
+        `/post/${postId}/comment/${commentId}`,
+        bodyForComment,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      })
+      );
       console.log(response.data)
       setEditedText('')
       editCommentModal.current.click()

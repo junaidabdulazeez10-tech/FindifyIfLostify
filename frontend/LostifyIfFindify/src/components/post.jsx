@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Comments from './comments'
-import axios from 'axios'
+import api from "../api/axios";
 import { useState } from 'react'
 import alertBootstrap from '../utils/utils'
 
@@ -15,11 +15,15 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
         text: commentText,
         profilePicture: localStorage.getItem("profilePicture")
       }
-      const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, bodyForComment, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await api.post(
+        `/post/${postId}/comment`,
+        bodyForComment,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      })
+      );
       alertBootstrap(response.data.message, "success")
       console.log(response.data)
       setCommentText('')
@@ -59,11 +63,11 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
             <div>{new Date(value.date).toLocaleDateString("de-DE")}</div>
           </Link>
           <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", }}><img className={`border rounded mt-2 ${mode ? "border-light" : "border-dark"}`}
-            style={{width: "100%", height: "auto", maxHeight: "550px", objectFit: "cover" }} src={value.image} /></Link>
-            <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", textAlign: "center", marginTop: "5px" }} className={` fs-3 ${mode ? "text-light" : "text-dark"}`}>Location: {value.location}</Link>
-            {showDescription && (
-              <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", }} className={` fs-5 ${mode ? "text-light" : "text-dark"}`}>Description: {value.description}</Link>
-            )}
+            style={{ width: "100%", height: "auto", maxHeight: "550px", objectFit: "cover" }} src={value.image} /></Link>
+          <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", textAlign: "center", marginTop: "5px" }} className={` fs-3 ${mode ? "text-light" : "text-dark"}`}>Location: {value.location}</Link>
+          {showDescription && (
+            <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", }} className={` fs-5 ${mode ? "text-light" : "text-dark"}`}>Description: {value.description}</Link>
+          )}
           <div className={`card-body d-flex align-items-center gap-3 fs-4 border mt-3 ${mode ? "border-light  text-light" : "border-dark  text-dark"} `}>
             <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", }} className={`${mode ? "text-light" : "text-dark"}`}>Comments ({value.comments.length})</Link>
             <button className="btn btn-outline-secondary me-2">{value.category}</button>
@@ -74,16 +78,16 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
               <div className={`border mt-2 mb-2 p-3 ${mode ? "border-light text-light" : "border-dark text-dark"}`}>
                 <div className='d-flex'>
                   <Link to={`/profile/${value.username}`} style={{ textDecoration: "none", }}>
-                    <img className={`user-img-comment border border-2 ${mode ? "border-light" : "border-dark"}`} style={{ objectFit: "cover", width: "55px", height: "55px", borderRadius: "30px" }} src={localStorage.getItem("profilePicture")}  /></Link>
+                    <img className={`user-img-comment border border-2 ${mode ? "border-light" : "border-dark"}`} style={{ objectFit: "cover", width: "55px", height: "55px", borderRadius: "30px" }} src={localStorage.getItem("profilePicture")} /></Link>
                   <div className='d-flex flex-column flex-grow-1 '>
                     <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none", }}>
                       <div className={`${mode ? "text-light" : "text-dark"}`} style={{ fontSize: "17px" }}>@{localStorage.getItem("username")}</div>
                     </Link>
                     <div className={` d-flex ${mode ? "bg-dark text-light" : "bg-body-secondary   text-dark"}`} style={{ fontSize: "16px", marginLeft: "3px", width: "100%" }}>
                       <input className={`${mode ? "bg-dark text-light" : "bg-body-secondary   text-dark"}`} value={commentText} onChange={(e) => setCommentText((e.target.value))}
-                        style={{ borderStyle: "none", padding: "5px 10px", borderRadius: "10px", flex: 1}} type="text" placeholder='Enter Your Text Here: ' />
+                        style={{ borderStyle: "none", padding: "5px 10px", borderRadius: "10px", flex: 1 }} type="text" placeholder='Enter Your Text Here: ' />
                       <button className={`${mode ? "bg-dark text-light border-light" : "bg-body-secondary   text-dark border-dark"}`}
-                        style={{ borderStyle: "solid", borderRadius: "10px", padding: "5px 10px"}} onClick={sendComment}>Send</button>
+                        style={{ borderStyle: "solid", borderRadius: "10px", padding: "5px 10px" }} onClick={sendComment}>Send</button>
                     </div>
                   </div>
                 </div>

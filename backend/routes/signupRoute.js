@@ -6,10 +6,11 @@ import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import multer from 'multer'
+import { storage } from "../config/cloudinary.js";
 
 
 dotenv.config();
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage });
 const router = Router()
 
 router.post("/signup", upload.single("profilePicture"), checkSchema(signupValidationSchema), async (req, res) => {
@@ -35,10 +36,13 @@ router.post("/signup", upload.single("profilePicture"), checkSchema(signupValida
     user.username = req.body.username;
     user.email = req.body.email;
     user.password = await bcrypt.hash(req.body.password, 10);
-    user.profilePicture =  `http://localhost:5000/uploads/${req.file.filename}`;
+    user.profilePicture = req.file.path;
     await user.save()
     const token = jwt.sign({ userId: user._id }, process.env.SECRET)
-    return res.status(201).json({ message: `Successfully signed up, Welcome ${req.body.username} :)`, username: req.body.username, profilePicture: `http://localhost:5000/uploads/${req.file.filename}`, token })
+    return res.status(201).json({
+      message: `Successfully signed up, Welcome ${req.body.username} :)`,
+      username: req.body.username, profilePicture: req.file.path, token
+    })
   } catch (error) {
     console.log(error)
     return res.status(500).json({ message: "Something went wrong with the Process :(" })
