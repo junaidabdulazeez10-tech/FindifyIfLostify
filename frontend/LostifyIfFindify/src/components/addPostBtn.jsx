@@ -1,4 +1,4 @@
-function AddPost({ mode, token, setCategory, setCondition, setDate, setDescription, setTitle, setLocation }) {
+function AddPost({ mode, token, setCategory, setCondition, condition, setDate, setDescription, setTitle, setLocation }) {
   return (
     token ?
       <div className="position-absolute bottom-0 end-0" style={{ marginRight: '35px', marginBottom: '50px' }}>

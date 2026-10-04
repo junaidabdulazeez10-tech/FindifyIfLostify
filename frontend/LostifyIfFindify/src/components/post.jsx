@@ -5,7 +5,7 @@ import { useState } from 'react'
 import alertBootstrap from '../utils/utils'
 
 
-function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, setLocation, setDate, setDescription, setCondition, setCommentId, getPosts, showDescription, setShowDescription }) {
+function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, setLocation, setDate, setDescription, setCondition, setCommentId, getPosts, showDescription }) {
   const [commentText, setCommentText] = useState('')
 
   async function sendComment() {

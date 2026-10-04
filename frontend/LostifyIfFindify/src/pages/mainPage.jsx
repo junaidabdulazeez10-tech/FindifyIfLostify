@@ -29,7 +29,7 @@ function MainPage({ mode, setMode, posts, token, setToken, id, setId, title, set
 
         <AddPost mode={mode} token={token} setToken={setToken} setCategory={setCategory}
           setTitle={setTitle} setLocation={setLocation} setDate={setDate}
-          setDescription={setDescription} setImage={setImage} setCondition={setCondition} />
+          setDescription={setDescription} setImage={setImage} setCondition={setCondition} condition={condition} />
       </div>
       <Forms mode={mode} setToken={setToken} token={token} id={id} setId={setId} title={title}
         setTitle={setTitle} category={category} setCategory={setCategory}

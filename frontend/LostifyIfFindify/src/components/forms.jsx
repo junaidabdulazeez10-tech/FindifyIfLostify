@@ -76,7 +76,8 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       setUsernameErrorSignUp(errors.filter((v) => v.path === "username").map((v) => v.msg).join("\n"))
       setEmailErrorSignUp(errors.filter((v) => v.path === "email").map((v) => v.msg).join("\n"))
       setPasswordErrorSignUp(errors.filter((v) => v.path === "password").map((v) => v.msg).join("\n"))
-      setPictureErrorSignUp(error.response?.data?.errors.filter((v) => v.path === "image").map((v) => v.msg).join("\n"))
+      setPictureErrorSignUp(errors.filter((v) => v.path === "image").map((v) => v.msg).join("\n")
+      );
     }
   }
 
@@ -330,8 +331,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             <div className="modal-body">
               <form>
                 <div className="mb-3 d-flex justify-content-center gap-3">
-                  <button type="button" className={`btn ${mode ? "btn-outline-light" : "btn-outline-dark"}`} onClick={() => { setCondition('Lost') }}>Lost</button>
-                  <button type="button" className={`btn ${mode ? "btn-outline-light" : "btn-outline-dark"}`} onClick={() => { setCondition('Found') }}>Found</button>
+                  <button type="button" className={`btn ${condition === "Lost" ? "btn-success" : mode ? "btn-outline-light" : "btn-outline-dark"}`} onClick={() => setCondition("Lost")}>
+                    Lost</button>
+                  <button type="button" className={`btn ${condition === "Found" ? "btn-success" : mode ? "btn-outline-light" : "btn-outline-dark"}`} onClick={() => setCondition("Found")}>Found</button>
                   <div className="text-danger" style={{ whiteSpace: "pre-line" }} >{conditionErrorAddPost}</div>
                 </div>
                 <div className="mb-3">
