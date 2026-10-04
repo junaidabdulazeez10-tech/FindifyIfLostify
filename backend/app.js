@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://lostify-if-findify.vercel.app",
+      "https://findify-if-lostify.vercel.app",
     ],
   })
 );
