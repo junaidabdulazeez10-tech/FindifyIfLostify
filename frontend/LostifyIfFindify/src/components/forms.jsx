@@ -43,7 +43,7 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
   const [imageErrorEditPost, setImageErrorEditPost] = useState('')
   const [generalErrorEditPost, setGeneralErrorEditPost] = useState('')
 
-   // Errors handling for editing a comment
+  // Errors handling for editing a comment
   const [textErrorEditComment, setTextErrorEditComment] = useState('')
   const [generalErrorEditComment, setGeneralErrorEditComment] = useState('')
 
@@ -199,7 +199,6 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
     } catch (error) {
       console.log(error.response?.data || error)
     }
-
   }
 
   async function editComment() {
