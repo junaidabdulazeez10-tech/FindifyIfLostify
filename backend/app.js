@@ -8,7 +8,14 @@ import loginRouter from "./routes/loginRoute.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://lostify-if-findify.vercel.app",
+    ],
+  })
+);
 app.use(express.json());
 
 
