@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import './mainbar.css'
+import AddPost from '../components/addPostBtn';
 
 
-function MainBar({ mode, setMode, token }) {
+function MainBar({ mode, setMode, token, setToken, setTitle,  setCategory, setLocation,  setDate, setDescription, setImage, condition, setCondition }) {
   return (
     <>
       <nav className={`navbar border mt-3 ${mode ? "border-light bg-dark text-light" : "border-dark light-background  text-dark"}`}>
@@ -18,14 +19,22 @@ function MainBar({ mode, setMode, token }) {
           </button>
           <Link to="/" className={`${mode ? "text-light" : "text-dark"}`} style={{ fontSize: 'clamp(20px, 4vw, 60px)', cursor: 'pointer', textDecoration: "none" }}>Findify if Lostify</Link>
           {token ?
-            <div className="d-flex flex-column gap-2">
+            <div className='d-flex align-items-center gap-3'>
               <div>
-                <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none"}}>
+                <AddPost mode={mode} token={token} setToken={setToken} setCategory={setCategory}
+                  setTitle={setTitle} setLocation={setLocation} setDate={setDate}
+                  setDescription={setDescription} setImage={setImage} setCondition={setCondition} condition={condition} />
+              </div>
+            <div className="d-flex flex-column gap-2">
+              <div >
+                <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none" }}>
                   <img style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "20px", marginRight: "2px" }}
                     src={localStorage.getItem("profilePicture")} /> </Link>
                 <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none", cursor: "pointer" }}
-                  className={`${mode ? "text-light" : "text-dark"}`}>{localStorage.getItem("username")}</Link></div>
+                  className={`${mode ? "text-light" : "text-dark"}`}>{localStorage.getItem("username")}</Link>
+              </div>
               <button className="btn btn-outline-danger" type='button' data-bs-toggle="modal" data-bs-target="#log-out-form">Log out</button>
+            </div>
             </div>
             :
             <div className="d-flex flex-column gap-2">
