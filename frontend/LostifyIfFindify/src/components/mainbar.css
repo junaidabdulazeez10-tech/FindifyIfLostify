@@ -1,3 +1,80 @@
 .light-background {
   background-color: #9e9e9efa !important;
 }
+
+/* DESKTOP */
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+}
+
+.main-title {
+  font-size: clamp(30px, 4vw, 60px);
+  white-space: nowrap;
+}
+
+.add-post-btn {
+  font-size: 2.5rem;
+  padding: 0.5rem 1rem;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 576px) {
+
+  .main-navbar-content {
+    gap: 4px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  /* Keep title as the biggest element */
+  .main-title {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  /* Theme button */
+  .theme-btn {
+    padding: 2px 4px !important;
+  }
+
+  .theme-btn svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .theme-btn span {
+    font-size: 9px;
+  }
+
+  /* Right side */
+  .user-controls {
+    gap: 3px !important;
+  }
+
+  /* + button */
+  .add-post-btn {
+    font-size: 14px !important;
+    padding: 2px 5px !important;
+    line-height: 1;
+  }
+
+  /* Profile */
+  .profile-img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .username {
+    font-size: 9px;
+  }
+
+  /* Logout */
+  .logout-btn {
+    padding: 1px 3px !important;
+    font-size: 9px !important;
+  }
+}
