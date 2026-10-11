@@ -7,9 +7,11 @@ import alertBootstrap from '../utils/utils'
 
 function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, setLocation, setDate, setDescription, setCondition, setCommentId, getPosts, showDescription }) {
   const [commentText, setCommentText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   async function sendComment() {
     try {
+      setLoading(true);
       const bodyForComment = {
         user: localStorage.getItem("username"),
         text: commentText,
@@ -30,6 +32,8 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
       getPosts()
     } catch (error) {
       console.log(error.response?.data || error)
+    } finally{
+      setLoading(false);
     }
   }
   return (
@@ -87,7 +91,9 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
                       <input className={`${mode ? "bg-dark text-light" : "bg-body-secondary   text-dark"}`} value={commentText} onChange={(e) => setCommentText((e.target.value))}
                         style={{ borderStyle: "none", padding: "5px 10px", borderRadius: "10px", flex: 1 }} type="text" placeholder='Enter Your Text Here: ' />
                       <button className={`${mode ? "bg-dark text-light border-light" : "bg-body-secondary   text-dark border-dark"}`}
-                        style={{ borderStyle: "solid", borderRadius: "10px", padding: "5px 10px" }} onClick={sendComment}>Send</button>
+                        style={{ borderStyle: "solid", borderRadius: "10px", padding: "5px 10px" }} onClick={sendComment}>
+                          {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Sending...  </>) : ("Send")}
+                        </button>
                     </div>
                   </div>
                 </div>

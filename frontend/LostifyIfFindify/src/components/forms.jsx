@@ -9,6 +9,7 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
   const [password, setPassword] = useState('')
   const [profilePicture, setProfilePicture] = useState('')
   const [editedText, setEditedText] = useState('')
+  const [loading, setLoading] = useState(false)
 
 
   // Errors handling for Log-in
@@ -58,6 +59,7 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
 
   async function signingUp() {
     try {
+      setLoading(true)
       const formDataSP = new FormData();
       formDataSP.append("username", username)
       formDataSP.append("email", email)
@@ -78,11 +80,14 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       setPasswordErrorSignUp(errors.filter((v) => v.path === "password").map((v) => v.msg).join("\n"))
       setPictureErrorSignUp(errors.filter((v) => v.path === "image").map((v) => v.msg).join("\n")
       );
+    } finally {
+      setLoading(false)
     }
   }
 
   async function loggingIn() {
     try {
+      setLoading(true)
       const bodyForLogIn = { email, password }
       const response = await api.post("/login", bodyForLogIn);
       alertBootstrap(response.data.message, 'success')
@@ -98,19 +103,27 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       setGeneralErrorLogin(error.response?.data?.message || "")
       setEmailErrorLogin(errors.filter((v) => v.path === "email").map((v) => v.msg).join("\n"))
       setPasswordErrorLogin(errors.filter((v) => v.path === "password").map((v) => v.msg).join("\n"))
+    } finally {
+      setLoading(false)
     }
   }
 
   async function loggingOut() {
-    localStorage.removeItem("token")
-    localStorage.removeItem("username")
-    localStorage.removeItem("profilePicture")
-    alertBootstrap("Logged out successfully", 'danger')
-    setToken("")
+    try {
+      setLoading(true)
+      localStorage.removeItem("token")
+      localStorage.removeItem("username")
+      localStorage.removeItem("profilePicture")
+      alertBootstrap("Logged out successfully", 'danger')
+      setToken("")
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function addPost() {
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("username", localStorage.getItem("username"))
       formData.append("profilePicture", localStorage.getItem("profilePicture"))
@@ -147,11 +160,14 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       setDateErrorAddPost(errors.filter((v) => v.path === "date").map((v) => v.msg).join("\n"))
       setDescriptionErrorAddPost(errors.filter((v) => v.path === "description").map((v) => v.msg).join("\n"))
       setImageErrorAddPost(error.response?.data?.errors.filter((v) => v.path === "image").map((v) => v.msg).join("\n"))
+    } finally {
+      setLoading(false);
     }
   }
 
   async function editPost() {
     try {
+      setLoading(true);
       const editFormData = new FormData();
       editFormData.append("username", localStorage.getItem("username"))
       editFormData.append("profilePicture", localStorage.getItem("profilePicture"))
@@ -181,11 +197,14 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       setDateErrorEditPost(errors.filter((v) => v.path === "date").map((v) => v.msg).join("\n"))
       setDescriptionErrorEditPost(errors.filter((v) => v.path === "description").map((v) => v.msg).join("\n"))
       setImageErrorEditPost(error.response?.data?.errors.filter((v) => v.path === "image").map((v) => v.msg).join("\n"))
+    } finally {
+      setLoading(false);
     }
   }
 
   async function deletePost() {
     try {
+      setLoading(true);
       const response = await api.delete(`/post/${id}`, {
         headers: {
           authorization: `Bearer ${token}`
@@ -196,11 +215,14 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       getPosts()
     } catch (error) {
       console.log(error.response?.data || error)
+    } finally {
+      setLoading(false);
     }
   }
 
   async function editComment() {
     try {
+      setLoading(true);
       const bodyForComment = {
         user: localStorage.getItem("username"),
         text: editedText,
@@ -224,6 +246,8 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
       const errors = error.response?.data?.errors || []
       setGeneralErrorEditComment(error.response?.data?.message || "")
       setTextErrorEditComment(errors.filter((v) => v.path === "text").map((v) => v.msg).join("\n"))
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -264,7 +288,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" ref={closeSignUpModal}>Close</button>
-              <button type="button" className="btn btn-outline-success" onClick={signingUp}>Sign up</button>
+              <button type="button" className="btn btn-outline-success" onClick={signingUp}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Signing up...  </>) : ("Sign Up")}
+              </button>
             </div>
           </div>
         </div>
@@ -283,7 +309,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" onClick={loggingOut}>Log out</button>
+              <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" onClick={loggingOut}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Logging out...  </>) : ("Log out")}
+              </button>
             </div>
           </div>
         </div>
@@ -314,7 +342,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" ref={closeLogInModal}>Close</button>
-              <button type="button" className="btn btn-outline-success" onClick={loggingIn}>Log in</button>
+              <button type="button" className="btn btn-outline-success" onClick={loggingIn}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Logging in...  </>) : ("Log in")}
+              </button>
             </div>
           </div>
         </div>
@@ -371,7 +401,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" ref={closeCreatePostModal}>Close</button>
-              <button type="button" className="btn btn-outline-success" onClick={addPost}>Add Post</button>
+              <button type="button" className="btn btn-outline-success" onClick={addPost}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Adding Post...  </>) : ("Add Post")}
+              </button>
             </div>
           </div>
         </div>
@@ -427,7 +459,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" ref={closeEditPostModal}>Close</button>
-              <button type="button" className="btn btn-outline-success" onClick={editPost}>Edit Post</button>
+              <button type="button" className="btn btn-outline-success" onClick={editPost}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Editing post...  </>) : ("Edit Post")}
+              </button>
             </div>
           </div>
         </div>
@@ -446,7 +480,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal" ref={deletePostModal}>Cancel</button>
-              <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" onClick={deletePost}>Delete</button>
+              <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" onClick={deletePost}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Deleting...  </>) : ("Delete")}
+              </button>
             </div>
           </div>
         </div>
@@ -469,7 +505,9 @@ function Forms({ mode, setToken, token, id, title, setTitle, category, setCatego
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" ref={editCommentModal}>Cancel</button>
-              <button type="button" className="btn btn-outline-success" onClick={editComment}>Edit</button>
+              <button type="button" className="btn btn-outline-success" onClick={editComment}>
+                {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Editing...  </>) : ("Edit")}
+              </button>
             </div>
           </div>
         </div>
