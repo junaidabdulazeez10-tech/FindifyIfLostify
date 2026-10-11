@@ -1,17 +1,38 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+.main-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.main-page-header {
+  flex-shrink: 0;
+}
+
+.posts-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .card {
   width: 100%;
   max-width: 50rem;
-  margin: 40px auto;
+  margin: 20px auto;
 }
 
-@media (max-width: 576px) {
-  :root {
-    --header-height: 220px;
-  }
-}
 
-@media (min-width: 577px) {
-  :root {
-    --header-height: 160px;
-  }
-}
+
+

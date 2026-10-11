@@ -3,6 +3,7 @@ import Comments from './comments'
 import api from "../api/axios";
 import { useState } from 'react'
 import alertBootstrap from '../utils/utils'
+import "./post.css"
 
 
 function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, setLocation, setDate, setDescription, setCondition, setCommentId, getPosts, showDescription }) {
@@ -32,7 +33,7 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
       getPosts()
     } catch (error) {
       console.log(error.response?.data || error)
-    } finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -49,7 +50,7 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
             <Link to={`/profile/${value.username}`} style={{ textDecoration: "none", }} className={`fs-3 ${mode ? "text-light" : "text-dark"}`}>@{value.username}</Link>
             {/* Only users can edit or delete thier own posts */}
             {localStorage.getItem("username") === value.username && <div className='d-flex flex-column gap-2' style={{ marginLeft: "auto" }}>
-              <button className="btn btn-warning" type='button' data-bs-toggle="modal" data-bs-target="#edit-post-form" onClick={() => {
+              <button className="btn btn-primary effect-btn" type='button' data-bs-toggle="modal" data-bs-target="#edit-post-form" onClick={() => {
                 setId(value._id)
                 setCondition(value.condition);
                 setTitle(value.title);
@@ -58,7 +59,7 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
                 setDate(value.date?.slice(0, 10));
                 setDescription(value.description);
               }}>Edit</button>
-              <button className="btn btn-danger mb-2" type='button' data-bs-toggle="modal" data-bs-target="#Delete-post-form" onClick={() => { setId(value._id) }}>Delete</button>
+              <button className="btn btn-danger mb-2 effect-btn" type='button' data-bs-toggle="modal" data-bs-target="#Delete-post-form" onClick={() => { setId(value._id) }}>Delete</button>
             </div>}
           </div>
           <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", }} className={`fs-1 d-flex justify-content-center ${mode ? "text-light" : "text-dark"}`}>{value.condition}</Link>
@@ -74,26 +75,34 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
           )}
           <div className={`card-body d-flex align-items-center gap-3 fs-4 border mt-3 ${mode ? "border-light  text-light" : "border-dark  text-dark"} `}>
             <Link to={`/comment/${value._id}`} style={{ textDecoration: "none", }} className={`${mode ? "text-light" : "text-dark"}`}>Comments ({value.comments.length})</Link>
-            <button className="btn btn-outline-secondary me-2">{value.category}</button>
+            <button className="btn btn-outline-secondary me-2 effect-btn">{value.category}</button>
           </div>
           {/* logged-in users can send comments here, while guests don't even see it */}
           {token &&
-            <div className=' border card-body fs-5'>
+            <div className="border card-body fs-5">
               <div className={`border mt-2 mb-2 p-3 ${mode ? "border-light text-light" : "border-dark text-dark"}`}>
-                <div className='d-flex'>
-                  <Link to={`/profile/${value.username}`} style={{ textDecoration: "none", }}>
-                    <img className={`user-img-comment border border-2 ${mode ? "border-light" : "border-dark"}`} style={{ objectFit: "cover", width: "55px", height: "55px", borderRadius: "30px" }} src={localStorage.getItem("profilePicture")} /></Link>
-                  <div className='d-flex flex-column flex-grow-1 '>
-                    <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none", }}>
-                      <div className={`${mode ? "text-light" : "text-dark"}`} style={{ fontSize: "17px" }}>@{localStorage.getItem("username")}</div>
+                <div className="d-flex flex-column flex-sm-row gap-3">
+                  <Link to={`/profile/${value.username}`} style={{ textDecoration: "none" }} className="flex-shrink-0">
+                    <img className={`user-img-comment border border-2 ${mode ? "border-light" : "border-dark"}`} style={{ objectFit: "cover", width: "55px", height: "55px", borderRadius: "30px", }} src={localStorage.getItem("profilePicture")} />
+                  </Link>
+                  <div className="d-flex flex-column flex-grow-1" style={{ minWidth: 0 }}>
+                    <Link to={`/profile/${localStorage.getItem("username")}`} style={{ textDecoration: "none" }}>
+                      <div className={`${mode ? "text-light" : "text-dark"}`} style={{ fontSize: "17px" }}> @{localStorage.getItem("username")} </div>
                     </Link>
-                    <div className={` d-flex ${mode ? "bg-dark text-light" : "bg-body-secondary   text-dark"}`} style={{ fontSize: "16px", marginLeft: "3px", width: "100%" }}>
-                      <input className={`${mode ? "bg-dark text-light" : "bg-body-secondary   text-dark"}`} value={commentText} onChange={(e) => setCommentText((e.target.value))}
-                        style={{ borderStyle: "none", padding: "5px 10px", borderRadius: "10px", flex: 1 }} type="text" placeholder='Enter Your Text Here: ' />
-                      <button className={`${mode ? "bg-dark text-light border-light" : "bg-body-secondary   text-dark border-dark"}`}
-                        style={{ borderStyle: "solid", borderRadius: "10px", padding: "5px 10px" }} onClick={sendComment}>
-                          {loading ? (<> <span className="spinner-border spinner-border-sm me-2" role="status" /> Sending...  </>) : ("Send")}
-                        </button>
+                    <div className={`d-flex flex-column flex-sm-row gap-2 mt-2 ${mode ? "bg-dark text-light" : "bg-body-secondary text-dark"}`}>
+                      <input className={`form-control ${mode ? "bg-dark text-light" : "bg-body-secondary text-dark"}`} value={commentText} onChange={(e) => setCommentText(e.target.value)} type="text" placeholder="Enter Your Text Here:" />
+                      <button className={`btn ${mode ? "btn-outline-light" : "btn-outline-dark"} effect-btn `} onClick={sendComment} disabled={loading}> {loading ? (
+                        <>
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                          />
+                          Sending...
+                        </>
+                      ) : (
+                        "Send"
+                      )}
+                      </button>
                     </div>
                   </div>
                 </div>

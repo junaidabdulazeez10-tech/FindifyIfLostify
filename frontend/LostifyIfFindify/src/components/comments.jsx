@@ -19,7 +19,7 @@ function Comments({ mode, comments, setCommentId }) {
                 <div style={{ fontSize: "16px", marginLeft: "3px", width: "100%", wordBreak: "break-word" }}>{value.text}</div>
               </div>
               {localStorage.getItem("username") === value.user && <div style={{marginLeft: "auto"}}>
-                <button className="btn btn-warning p-1" type='button' data-bs-toggle="modal" data-bs-target="#edit-comment-form" onClick={() => { setCommentId(value._id) }} >edit</button>
+                <button className="btn btn-primary effect-btn  p-1" type='button' data-bs-toggle="modal" data-bs-target="#edit-comment-form" onClick={() => { setCommentId(value._id) }} >edit</button>
               </div>}
             </div>
           </div>
