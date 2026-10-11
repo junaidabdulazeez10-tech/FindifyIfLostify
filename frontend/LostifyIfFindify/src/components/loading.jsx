@@ -5,7 +5,7 @@ export default function Loading() {
       <div className="spinner-grow" role="status">
         <span className="visually-hidden">Loading...</span>
       </div>
-      <h4 className="mb-0">Finding things...</h4>
+      <h4 className="mb-0">Findifying things...</h4>
       <small className="text-secondary">
         Please wait while we load the latest posts
       </small>
