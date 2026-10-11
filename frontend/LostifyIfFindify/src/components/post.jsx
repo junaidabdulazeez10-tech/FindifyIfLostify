@@ -18,6 +18,9 @@ function Post({ mode, show, posts, token, postId, setId, setTitle, setCategory, 
         text: commentText,
         profilePicture: localStorage.getItem("profilePicture")
       }
+      if(commentText.length === 0){
+        alertBootstrap("Write Something dude..., ", "danger")
+      }
       const response = await api.post(
         `/post/${postId}/comment`,
         bodyForComment,
